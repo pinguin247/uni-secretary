@@ -1,8 +1,9 @@
 from typing import Final
 from telegram import *
 from telegram.ext import *
+from bottoken import BOT_TOKEN
 #Final is just for giving constants a type
-TOKEN: Final = '6391190939:AAEjDkGB0XZ5sWZ83Ic-5qjb6YR_tQkPJfA'
+TOKEN: Final = BOT_TOKEN
 BOT_USERNAME: Final = '@uni_secretary_bot'
 
 
@@ -21,14 +22,21 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ]
     reply_markup = InlineKeyboardMarkup(START_MESSAGE_BUTTONS)
     await update.message.reply_text(
-        text="You can use /settimetable to set a new timetable"
+        text="You can use /settimetable to set a new timetable, or replace the existing one "
         , reply_markup=reply_markup)
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Help is on the way!")
 
 async def settimetable_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("noice")
+    TIMETABLE_MESSAGE_BUTTONS = [
+        #First row, 2 buttons
+        [InlineKeyboardButton("Save Timetable Image", callback_data="Image"), InlineKeyboardButton("Parse Timetable", callback_data="ew")],
+    ]
+    reply_markup = InlineKeyboardMarkup(TIMETABLE_MESSAGE_BUTTONS)
+    await update.message.reply_text(
+        text="Do you want to save your timetable as an image or parse the timetable to automically update module details?"
+        , reply_markup=reply_markup)
 
 
 
@@ -130,7 +138,7 @@ if __name__ == '__main__':
     #Commands
     app.add_handler(CommandHandler('start', start_command))
     app.add_handler(CommandHandler('help', help_command))
-    app.add_handler(CommandHandler('custom', settimetable_command))
+    app.add_handler(CommandHandler('settimetable', settimetable_command))
 
     #Menu 
     app.add_handler(CallbackQueryHandler(menu_response))
